@@ -1,6 +1,6 @@
 # 12S ESC
 
-This repository provides an open-source design for a 12S Electronic Speed Controller (ESC). It is designed to work with [ESCape32](https://github.com/neoxic/ESCape32), an open-source 32-bit ESC firmware.
+This repository provides an open-source design for a 12S Electronic Speed Controller (ESC) geared towards heavy-lift multirotor applications. It is designed to work with [ESCape32](https://github.com/neoxic/ESCape32), an open-source 32-bit ESC firmware.
 
 ## Specifications
 
@@ -48,8 +48,18 @@ Build the following baseline target and flash at address `0x08001000`.
 add_target(CRLS69 STM32G431 DEAD_TIME=130 COMP_MAP=123 HALL_MAP=0xB450 SENS_MAP=0xB2A6A7 VOLT_MUL=3130 CURR_MUL=20 TEMP_CHAN=12 TEMP_FUNC=NTC10K3455UP2K USE_XOR USE_HSE=24)
 ```
 
-## Resources
+### Resources on Installation
 
 [ESCape32's Installation Wiki Page](https://github.com/neoxic/ESCape32/wiki/Installation)
 
 [Building ESCape32 on Windows](https://github.com/adrianblakey/slot-car-ecom/wiki/Building-ESCape32-on-Windows)
+
+## Settings and Configuration
+
+During rapid deceleration on a 12S battery, there is a possibility of BEMF surpassing the hardware voltage rating. To mitigate this, lowering `duty_rate` to `0.5%/ms` is recommended.
+
+### Resources on Settings and Configuration
+
+[ESCape32's Configuration Wiki Page](https://github.com/neoxic/ESCape32/wiki/Configuration)
+
+[ESCape32's Settings Wiki Page](https://github.com/neoxic/ESCape32/wiki/Settings)
