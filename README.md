@@ -1,13 +1,13 @@
 # 12S ESC
 
-This repository provides an open-source design for a 12S Electronic Speed Controller (ESC) geared towards heavy-lift multirotor applications. It is designed to work with [ESCape32](https://github.com/neoxic/ESCape32), an open-source 32-bit ESC firmware.
+This repository provides a low-cost, open-source design for a 12S Electronic Speed Controller (ESC) geared towards heavy-lift multirotor applications. It is designed to work with [ESCape32](https://github.com/neoxic/ESCape32), an open-source 32-bit ESC firmware.
 
 ## Specifications
 
 - STM32G431 processor
 - 24MHz HSE crystal resonator
-- 12S (50.4V max) input
-- All the features supported by [ESCape32](https://github.com/neoxic/ESCape32)
+- 12S input (up to 50.4V)
+- Full support for [ESCape32](https://github.com/neoxic/ESCape32)
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ For blank STM32s, these are the general steps to get the board up and running:
 3. Flashing the firmware.
 
 > [!WARNING]  
-> Do not power the board directly with a battery before finishing these steps. Otherwise, the MOSFETs will get damaged since the gate drivers in V1 hardware do not have shoot-through protection.
+> Do **not** power the board with a battery before completing these steps. V1 hardware does not include shoot-through protection on the gate drivers, and powering prematurely may damage the MOSFETs.
 
 ### Prerequisites
 
@@ -56,7 +56,10 @@ add_target(CRLS69 STM32G431 DEAD_TIME=130 COMP_MAP=123 HALL_MAP=0xB450 SENS_MAP=
 
 ## Settings and Configuration
 
-During rapid deceleration on a 12S battery, there is a possibility of BEMF surpassing the hardware voltage rating. To mitigate this, lowering `duty_rate` to `0.5%/ms` is recommended.
+Under rapid deceleration with a 12S battery, the BEMF may exceed hardware voltage ratings. This was observed during no-load testing with a bench power supply. To mitigate this, limiting `duty_rate` to `0.5%/ms` is recommended.
+
+> [!TIP]
+> In real-world scenarios with a battery under load, this condition is less likely due to natural voltage sag.
 
 ### Resources on Settings and Configuration
 
