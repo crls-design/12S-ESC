@@ -2,12 +2,29 @@
 
 This repository provides a low-cost, open-source design for a 12S Electronic Speed Controller (ESC) geared towards heavy-lift multirotor applications. It is designed to work with [ESCape32](https://github.com/neoxic/ESCape32), an open-source 32-bit ESC firmware.
 
+## Design Philosophy
+
+The goal of this ESC design is to maximize the performance-to-cost ratio by utilizing readily available components and open-source firmware while maintaining electrical and thermal characteristics that meet or exceed those of commercial ESCs in the same class.
+
+This project aims to offer a competitive alternative to proprietary ESCs used in drones, robotics, and other high-power applications.
+
 ## Specifications
 
 - STM32G431 processor
 - 24MHz HSE crystal resonator
 - 12S input (up to 50.4V)
 - Full support for [ESCape32](https://github.com/neoxic/ESCape32)
+
+> [!NOTE]  
+> Although these are designed for 12S, the actual hardware is rated for 100V which is nearly double.
+
+## Gallery
+
+<p style="text-align:center">
+    <img src="./images/v1 raw.jpg" height="280">
+    <img src="./images/v1 bypassed.jpg" height="280">
+    <img src="./images/v1 explosion.jpg" height="280">
+</p>
 
 ## Getting Started
 
@@ -18,7 +35,7 @@ For blank STM32s, these are the general steps to get the board up and running:
 3. Flashing the firmware.
 
 > [!WARNING]  
-> Do **not** power the board with a battery before completing these steps. V1 hardware does not include shoot-through protection on the gate drivers, and powering prematurely may damage the MOSFETs.
+> Do **not** power the board with a battery before completing these steps. The gate drivers do not have shoot-through protection, and powering prematurely will damage the MOSFETs.
 
 ### Prerequisites
 
@@ -42,11 +59,22 @@ For blank STM32s, these are the general steps to get the board up and running:
 
 ### Firmware
 
-Build the following baseline target and flash at address `0x08001000`.
+Build the following baseline target(s) and flash at address `0x08001000`.
+
+**v1:**
 
 ```
-add_target(CRLS69 STM32G431 DEAD_TIME=130 COMP_MAP=123 HALL_MAP=0xB450 SENS_MAP=0xB2A6A7 VOLT_MUL=3130 CURR_MUL=20 TEMP_CHAN=12 TEMP_FUNC=NTC10K3455UP2K USE_XOR USE_HSE=24)
+add_target(CRLS1 STM32G431 DEAD_TIME=240 COMP_MAP=123 HALL_MAP=0xB450 SENS_MAP=0xB2A6A7 VOLT_MUL=3130 CURR_MUL=20 TEMP_CHAN=12 TEMP_FUNC=NTC10K3455UP2K USE_XOR USE_HSE=24 DUTY_SPUP=10 DUTY_RATE=5 FREQ_MIN=24 FREQ_MAX=24 TELEM_MODE=1 TELEM_POLES=2)
 ```
+
+**v2:**
+
+```
+add_target(CRLS2 STM32G431 DEAD_TIME=120 COMP_MAP=312 HALL_MAP=0xB450 SENS_MAP=0xB2A6A7 VOLT_MUL=3130 TEMP_CHAN=12 TEMP_FUNC=NTC10K3455UP2K USE_XOR USE_HSE=24 DUTY_SPUP=10 DUTY_RATE=10 PROT_TEMP=90 FREQ_MIN=24 FREQ_MAX=24 TELEM_MODE=1 TELEM_POLES=2)
+```
+
+> [!NOTE]  
+> The deadtime in these target strings are calculated with a very moderate safety margin of 100%. The calculation is based on the gate fall-time information at 50V Vds from the datasheet.
 
 ### Resources on Installation
 
@@ -56,10 +84,10 @@ add_target(CRLS69 STM32G431 DEAD_TIME=130 COMP_MAP=123 HALL_MAP=0xB450 SENS_MAP=
 
 ## Settings and Configuration
 
-Under rapid deceleration with a 12S battery, the BEMF may exceed hardware voltage ratings. This was observed during no-load testing with a bench power supply. To mitigate this, limiting `duty_rate` to `0.5%/ms` is recommended.
+Under rapid deceleration on 50V input, the back electromotive force (BEMF) may exceed hardware voltage ratings. This was observed during no-load testing with a bench power supply. To mitigate this, limiting `duty_rate` to `0.5%/ms` is recommended.
 
 > [!TIP]
-> In real-world scenarios with a battery under load, this condition is less likely due to natural voltage sag.
+> In real-world scenarios with a battery under load, this condition is less likely due to voltage sag and the battery acting as a load.
 
 ### Resources on Settings and Configuration
 
