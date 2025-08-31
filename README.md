@@ -20,7 +20,7 @@ This project aims to offer a competitive alternative to proprietary ESCs used in
 
 ## Gallery
 
-<p style="text-align:center">
+<p align="center">
     <img src="./images/v1 raw.jpg" height="280">
     <img src="./images/v1 bypassed.jpg" height="280">
     <img src="./images/v1 explosion.jpg" height="280">
